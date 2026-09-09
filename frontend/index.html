@@ -1,24 +1,27 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clínica veterinaria</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Veterinaria - Calendario de Citas</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/app.js" defer></script>
+    <script src="/js/Vista_Citas.JS" defer></script>
 </head>
 <body>
-  <main>
-    <h1>Hola Mundo 🐾</h1>
-    <p>Bienvenidos al sistema de la clínica veterinaria.</p>
+    <header class="header">
+        <h1>Veterinaria Huellitas</h1>
+    </header>
 
-    <p id="status" role="status" aria-live="polite">
-      Comprobando conexión...
-    </p>
-
-    <button id="check-button" type="button">
-      Comprobar conexión
-    </button>
-  </main>
+    <main class="contenedor-principal">
+        <section class="calendario-seccion">
+            <h2>Calendario de Citas del Día</h2>
+            
+            <!-- Contenedor visual del calendario -->
+            <div id="calendario-grid" class="calendario-grid">
+                <div id="lista-citas"></div>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
