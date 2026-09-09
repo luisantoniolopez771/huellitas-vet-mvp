@@ -1,0 +1,17 @@
+{
+  "name": "clinica-veterinaria-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Infraestructura inicial de la clínica veterinaria",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "oracledb": "^7.0.1"
+  }
+}
