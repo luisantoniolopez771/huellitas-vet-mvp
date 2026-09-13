@@ -1,27 +1,53 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clínica Veterinaria - Calendario de Citas</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/app.js" defer></script>
-    <script src="/js/Vista_Citas.JS" defer></script>
+    <title>Veterinaria Huellitas - Calendario de Citas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Cargar solo app.js para la vista de calendario -->
+    <script src="js/app.js" defer></script>
 </head>
-<body>
-    <header class="header">
-        <h1>Veterinaria Huellitas</h1>
-    </header>
 
-    <main class="contenedor-principal">
-        <section class="calendario-seccion">
-            <h2>Calendario de Citas del Día</h2>
-            
-            <!-- Contenedor visual del calendario -->
-            <div id="calendario-grid" class="calendario-grid">
-                <div id="lista-citas"></div>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🐾 Veterinaria Huellitas</h1>
+            <p class="subtitle">Sistema de Citas y Calendario</p>
+        </header>
+
+        <main class="calendar-card">
+            <!-- Encabezado con botones e IDs requeridos por app.js -->
+            <div class="calendar-header">
+                <button id="btnPrev" class="nav-btn" aria-label="Mes anterior">&larr;</button>
+                <h2 id="monthYearText">Septiembre de 2026</h2>
+                <button id="btnNext" class="nav-btn" aria-label="Mes siguiente">&rarr;</button>
             </div>
-        </section>
-    </main>
+
+            <!-- Días de la semana -->
+            <div class="weekdays-grid">
+                <div>Dom</div>
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
+            </div>
+
+            <!-- Contenedor donde app.js dibuja los días -->
+            <div id="daysGrid" class="days-grid"></div>
+
+            <!-- Sección de detalle de citas -->
+            <section class="details-section">
+                <h3 id="selectedDateTitle">Citas para hoy</h3>
+                <div id="citasList" class="citas-list">
+                    <p class="empty-msg">Cargando citas...</p>
+                </div>
+            </section>
+        </main>
+    </div>
 </body>
+
 </html>

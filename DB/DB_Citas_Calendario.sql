@@ -1,3 +1,8 @@
+-- Cambiar el contexto a la Pluggable Database y al esquema del usuario de la app
+ALTER SESSION SET CONTAINER = FREEPDB1;
+ALTER SESSION SET CURRENT_SCHEMA = VET_APP;
+
+-- Crear tabla citas si no existe en el esquema VET_APP
 CREATE TABLE citas (
     id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     mascota VARCHAR2(100) NOT NULL,
@@ -5,8 +10,8 @@ CREATE TABLE citas (
     fecha_hora TIMESTAMP NOT NULL
 );
 
--- Registros de prueba (opcional para comprobar que retorne datos)
-INSERT INTO citas (mascota, dueno, fecha_hora) 
+-- Insertar registro de prueba
+INSERT INTO citas (mascota, dueno, fecha_hora)
 VALUES ('Max', 'Juan Pérez', SYSTIMESTAMP);
 
 COMMIT;
