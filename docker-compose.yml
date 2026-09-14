@@ -1,42 +1,35 @@
-name: clinica-veterinaria
+version: '3.8'
 
 services:
-  oracle:
-    image: gvenzl/oracle-free:23.26.1-slim
-    environment:
-      ORACLE_PASSWORD: ${ORACLE_PASSWORD:?Define ORACLE_PASSWORD en .env}
-      APP_USER: vet_app
-      APP_USER_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
-    ports:
-      - "127.0.0.1:1521:1521"
-    volumes:
-      - oracle_data:/opt/oracle/oradata
-    shm_size: "1gb"
-    healthcheck:
-      test: ["CMD", "healthcheck.sh"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 120s
-    restart: unless-stopped
-
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    ports:
+      - "127.0.0.1:3001:3000"
     environment:
       NODE_ENV: production
       PORT: "3000"
       DB_USER: vet_app
-      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_CONNECT_STRING: oracle:1521/FREEPDB1
-    ports:
-      - "127.0.0.1:3000:3000"
     depends_on:
-      oracle:
-        condition: service_healthy
-    init: true
-    restart: unless-stopped
+      - oracle
+    volumes:
+      - ./frontend:/app/frontend:ro
+
+  oracle:
+    image: gvenzl/oracle-free:latest
+    container_name: clinica-veterinaria-oracle-1
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      APP_USER: VET_APP
+      APP_USER_PASSWORD: ${APP_USER_PASSWORD}
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ./DB/DB_Citas_Calendario.sql:/container-entrypoint-initdb.d/DB_Citas_Calendario.sql
 
 volumes:
   oracle_data:

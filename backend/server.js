@@ -52,6 +52,34 @@ app.get("/health", async (req, res) => {
 // Publica index.html, CSS y JavaScript desde el mismo servidor.
 app.use(express.static(path.join(__dirname, "../frontend")));
 
+// RUTA DE CITAS (VH-2)
+app.get("/api/citas", async (req, res) => {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    const result = await connection.execute(
+      `SELECT * FROM CITAS`,
+      [],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error al obtener citas:", error);
+    res.status(500).json({
+      error: "Error al consultar las citas",
+      mensaje_oracle: error.message
+    });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error al cerrar conexión:", err);
+      }
+    }
+  }
+});
+
 async function start() {
   for (const variable of [
     "DB_USER",
