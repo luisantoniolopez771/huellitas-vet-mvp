@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veterinaria Huellitas - Calendario de Citas</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Cargar solo app.js para la vista de calendario -->
+    <!-- Cargar app.js para la vista de calendario y vista_citas.js para el formulario -->
     <script src="js/app.js" defer></script>
+    <script src="js/vista_citas.js" defer></script>
 </head>
 
 <body>
@@ -47,6 +48,25 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div id="seccion-agendar">
+        <h2>Agendar Nueva Cita</h2>
+        <form id="form-cita">
+            <label for="nombre_dueno">Nombre del dueño:</label>
+            <input type="text" id="nombre_dueno" required>
+            
+            <label for="nombre_mascota">Nombre de la mascota:</label>
+            <input type="text" id="nombre_mascota" required>
+            
+            <label for="fecha_hora">Fecha y Hora:</label>
+            <input type="datetime-local" id="fecha_hora" required>
+            
+            <button type="submit">Agendar Cita</button>
+        </form>
+        
+        <!-- Aquí se mostrarán los mensajes de éxito o error -->
+        <div id="mensaje-resultado"></div>
     </div>
 </body>
 

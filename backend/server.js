@@ -49,6 +49,51 @@ app.get("/health", async (req, res) => {
   }
 });
 
+app.post('/api/citas', async (req, res) => {
+  const { dueno, mascota, fechaHora } = req.body;
+  let connection;
+  
+  try {
+    // Obtener conexión a Oracle
+    connection = await pool.getConnection(); 
+    
+    // 1. VALIDACIÓN: Buscar si ya hay una cita a esa misma hora
+    const checkQuery = `
+      SELECT COUNT(*) AS total 
+      FROM Citas 
+      WHERE fecha_hora = TO_DATE(:fechaHora, 'YYYY-MM-DD"T"HH24:MI')
+    `;
+    const checkResult = await connection.execute(
+      checkQuery, 
+      [fechaHora], 
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    
+    if (checkResult.rows[0].TOTAL > 0) {
+      // Si la cuenta es mayor a 0, ya está ocupado. Rechazar la petición.
+      return res.status(400).json({ error: 'El horario está ocupado. Por favor, elige otra fecha y hora.' });
+    }
+    
+    // 2. INSERCIÓN: Si está libre, guardar en la base de datos (con las columnas corregidas)
+    const insertQuery = `
+      INSERT INTO Citas (dueno, mascota, fecha_hora) 
+      VALUES (:dueno, :mascota, TO_DATE(:fechaHora, 'YYYY-MM-DD"T"HH24:MI'))
+    `;
+    await connection.execute(insertQuery, [dueno, mascota, fechaHora], { autoCommit: true });
+    
+    // Responder con éxito
+    res.status(200).json({ mensaje: 'Cita guardada con éxito.' });
+    
+  } catch (error) {
+    console.error("Error en /api/citas:", error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  } finally {
+    if (connection) {
+      try { await connection.close(); } catch (err) { console.error(err); }
+    }
+  }
+});
+
 // Publica index.html, CSS y JavaScript desde el mismo servidor.
 app.use(express.static(path.join(__dirname, "../frontend")));
 
