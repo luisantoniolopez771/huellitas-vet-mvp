@@ -186,3 +186,40 @@ start().catch((error) => {
   console.error("No se pudo iniciar el servidor:", error.message);
   process.exit(1);
 });
+
+
+// 1. Endpoint para Cancelar
+app.post('/api/citas/:id/cancelar', (req, res) => {
+    const id = req.params.id;
+    const query = "UPDATE citas SET estatus = 'Cancelada' WHERE id = ?";
+    
+    db.query(query, [id], (err, result) => {
+        if (err) return res.status(500).json({ error: "Error en la base de datos" });
+        res.json({ mensaje: "Cita cancelada correctamente" });
+    });
+});
+
+// 2. Endpoint para Reprogramar (Incluye validación VH-3)
+app.post('/api/citas/:id/reprogramar', (req, res) => {
+    const id = req.params.id;
+    const { nueva_fecha_hora } = req.body;
+
+    // Verificar empalme (Regla VH-3)
+    const checkQuery = "SELECT id FROM citas WHERE fecha_hora = ? AND estatus = 'Activa'";
+    
+    db.query(checkQuery, [nueva_fecha_hora], (err, results) => {
+        if (err) return res.status(500).json({ error: "Error al validar horario" });
+        
+        // Si hay resultados, el horario está ocupado
+        if (results.length > 0) {
+            return res.status(409).json({ error: "Empalme de horario: La fecha y hora ya están ocupadas." });
+        }
+
+        // Si está libre, actualizamos
+        const updateQuery = "UPDATE citas SET fecha_hora = ? WHERE id = ?";
+        db.query(updateQuery, [nueva_fecha_hora, id], (err, result) => {
+            if (err) return res.status(500).json({ error: "Error al actualizar" });
+            res.json({ mensaje: "Cita reprogramada con éxito" });
+        });
+    });
+});
