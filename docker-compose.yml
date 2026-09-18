@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -11,7 +9,7 @@ services:
       NODE_ENV: production
       PORT: "3000"
       DB_USER: vet_app
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: PerritoSeguro123
       DB_CONNECT_STRING: oracle:1521/FREEPDB1
     depends_on:
       - oracle
@@ -22,9 +20,9 @@ services:
     image: gvenzl/oracle-free:latest
     container_name: clinica-veterinaria-oracle-1
     environment:
-      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      ORACLE_PASSWORD: AdminOracle123
       APP_USER: VET_APP
-      APP_USER_PASSWORD: ${APP_USER_PASSWORD}
+      APP_USER_PASSWORD: PerritoSeguro123
     ports:
       - "1521:1521"
     volumes:

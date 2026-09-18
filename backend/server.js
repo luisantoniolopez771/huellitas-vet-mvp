@@ -186,3 +186,68 @@ start().catch((error) => {
   console.error("No se pudo iniciar el servidor:", error.message);
   process.exit(1);
 });
+
+// --- ENDPOINT 1: Cancelar cita ---
+app.post('/api/citas/:id/cancelar', async (req, res) => {
+    const { id } = req.params;
+    let connection;
+    try {
+        // Asume que oracledb.getConnection() es tu forma de conectar
+        connection = await oracledb.getConnection(); 
+        
+        const query = `UPDATE citas SET estatus = 'Cancelada' WHERE id = :id`;
+        
+        // Ejecutamos la consulta y forzamos el commit
+        await connection.execute(query, [id], { autoCommit: true });
+        res.json({ mensaje: "Cita cancelada con éxito" });
+        
+    } catch (err) {
+        console.error("Error al cancelar:", err);
+        res.status(500).json({ error: "Error en la base de datos" });
+    } finally {
+        if (connection) {
+            try { await connection.close(); } catch (err) { console.error(err); }
+        }
+    }
+});
+
+// --- ENDPOINT 2: Reprogramar cita (Validación VH-3) ---
+app.post('/api/citas/:id/reprogramar', async (req, res) => {
+    const { id } = req.params;
+    const { nueva_fecha_hora } = req.body;
+    let connection;
+    
+    try {
+        connection = await oracledb.getConnection();
+        
+        // 1. Validar empalmes (Regla VH-3)
+        // Convertimos el string del frontend a TIMESTAMP de Oracle para comparar
+        const checkQuery = `
+            SELECT id FROM citas 
+            WHERE fecha_hora = TO_TIMESTAMP(:nueva_fecha, 'YYYY-MM-DD"T"HH24:MI') 
+            AND estatus = 'Activa'
+        `;
+        const checkResult = await connection.execute(checkQuery, { nueva_fecha: nueva_fecha_hora });
+
+        if (checkResult.rows && checkResult.rows.length > 0) {
+            return res.status(409).json({ error: "El horario seleccionado ya está ocupado. Elige otro." });
+        }
+
+        // 2. Si no hay empalme, actualizamos la fecha
+        const updateQuery = `
+            UPDATE citas 
+            SET fecha_hora = TO_TIMESTAMP(:nueva_fecha, 'YYYY-MM-DD"T"HH24:MI') 
+            WHERE id = :id
+        `;
+        await connection.execute(updateQuery, { nueva_fecha: nueva_fecha_hora, id: id }, { autoCommit: true });
+        
+        res.json({ mensaje: "Cita reprogramada con éxito" });
+    } catch (err) {
+        console.error("Error al reprogramar:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    } finally {
+        if (connection) {
+            try { await connection.close(); } catch (err) { console.error(err); }
+        }
+    }
+});
