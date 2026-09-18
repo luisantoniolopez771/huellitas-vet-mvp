@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veterinaria Huellitas - Calendario de Citas</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Cargar app.js para la vista de calendario y vista_citas.js para el formulario -->
     <script src="js/app.js" defer></script>
     <script src="js/vista_citas.js" defer></script>
 </head>
@@ -18,55 +17,87 @@
             <p class="subtitle">Sistema de Citas y Calendario</p>
         </header>
 
-        <main class="calendar-card">
-            <!-- Encabezado con botones e IDs requeridos por app.js -->
-            <div class="calendar-header">
-                <button id="btnPrev" class="nav-btn" aria-label="Mes anterior">&larr;</button>
-                <h2 id="monthYearText">Septiembre de 2026</h2>
-                <button id="btnNext" class="nav-btn" aria-label="Mes siguiente">&rarr;</button>
-            </div>
-
-            <!-- Días de la semana -->
-            <div class="weekdays-grid">
-                <div>Dom</div>
-                <div>Lun</div>
-                <div>Mar</div>
-                <div>Mié</div>
-                <div>Jue</div>
-                <div>Vie</div>
-                <div>Sáb</div>
-            </div>
-
-            <!-- Contenedor donde app.js dibuja los días -->
-            <div id="daysGrid" class="days-grid"></div>
-
-            <!-- Sección de detalle de citas -->
-            <section class="details-section">
-                <h3 id="selectedDateTitle">Citas para hoy</h3>
-                <div id="citasList" class="citas-list">
-                    <p class="empty-msg">Cargando citas...</p>
+        <!-- Contenedor principal a dos columnas -->
+        <div class="dashboard-layout">
+            
+            <!-- Columna Izquierda: Calendario interactivo -->
+            <main class="calendar-card">
+                <div class="calendar-header">
+                    <button id="btnPrev" class="nav-btn" aria-label="Mes anterior">&larr;</button>
+                    <h2 id="monthYearText">Septiembre 2026</h2>
+                    <button id="btnNext" class="nav-btn" aria-label="Mes siguiente">&rarr;</button>
                 </div>
-            </section>
-        </main>
-    </div>
 
-    <div id="seccion-agendar">
-        <h2>Agendar Nueva Cita</h2>
-        <form id="form-cita">
-            <label for="nombre_dueno">Nombre del dueño:</label>
-            <input type="text" id="nombre_dueno" required>
-            
-            <label for="nombre_mascota">Nombre de la mascota:</label>
-            <input type="text" id="nombre_mascota" required>
-            
-            <label for="fecha_hora">Fecha y Hora:</label>
-            <input type="datetime-local" id="fecha_hora" required>
-            
-            <button type="submit">Agendar Cita</button>
-        </form>
-        
-        <!-- Aquí se mostrarán los mensajes de éxito o error -->
-        <div id="mensaje-resultado"></div>
+                <div class="weekdays-grid">
+                    <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div>
+                    <div>Jue</div><div>Vie</div><div>Sáb</div>
+                </div>
+
+                <div id="daysGrid" class="days-grid"></div>
+            </main>
+
+            <!-- Columna Derecha: Formularios y Detalles -->
+            <aside class="sidebar">
+                
+                <!-- Tarjeta para agendar nueva cita -->
+                <section id="seccion-agendar" class="panel-card">
+                    <h2>Agendar Nueva Cita</h2>
+                    <form id="form-cita" class="form-layout">
+                        <div class="input-group">
+                            <label for="nombre_dueno">Dueño:</label>
+                            <input type="text" id="nombre_dueno" required placeholder="Ej. Juan Pérez">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="nombre_mascota">Mascota:</label>
+                            <input type="text" id="nombre_mascota" required placeholder="Ej. Max">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="fecha_hora">Fecha y Hora:</label>
+                            <input type="datetime-local" id="fecha_hora" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Agendar Cita</button>
+                    </form>
+                    <div id="mensaje-resultado"></div>
+                </section>
+
+                <!-- Tarjeta para ver y gestionar citas del día -->
+                <section class="details-section panel-card">
+                    <h3 id="selectedDateTitle">Citas para hoy</h3>
+                    
+                    <div id="citasList" class="citas-list">
+                        
+                        <!-- ========================================== -->
+                        <!-- TARJETA DE CITA CON BOTONES DE MODIFICAR Y BORRAR -->
+                        <!-- ========================================== -->
+                        <div class="cita-card" id="cita-1">
+                            <div class="cita-info">
+                                <h4>🐾 Max</h4>
+                                <p><strong>Fecha Actual:</strong> 2026-09-20 10:00:00</p>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="cita-actions">
+                                <!-- BOTÓN MODIFICAR -->
+                                <div class="reprogramar-group">
+                                    <label for="nueva-fecha-1">Nuevo horario:</label>
+                                    <input type="datetime-local" id="nueva-fecha-1">
+                                    <button onclick="reprogramarCita(1)" class="btn-secondary">Modificar (Reprogramar)</button>
+                                </div>
+                                
+                                <!-- BOTÓN BORRAR -->
+                                <button onclick="cancelarCita(1)" class="btn-danger">Borrar (Cancelar)</button>
+                            </div>
+                        </div>
+                        <!-- ========================================== -->
+
+                    </div>
+                </section>
+            </aside>
+        </div>
     </div>
 </body>
 

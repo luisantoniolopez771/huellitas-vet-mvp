@@ -164,6 +164,9 @@ function createDayCell(dayNumber, isOtherMonth) {
   return div;
 }
 
+// ==========================================
+// FUNCIÓN CORREGIDA: Dibuja las citas y los botones
+// ==========================================
 function renderCitasDetail(dateKey, dateObj, citas) {
   const selectedDateTitle = document.getElementById("selectedDateTitle");
   const listContainer = document.getElementById("citasList");
@@ -190,16 +193,36 @@ function renderCitasDetail(dateKey, dateObj, citas) {
 
     const mascota = cita.MASCOTA || cita.mascota || "Sin nombre";
     const dueno = cita.DUENO || cita.dueno || "Sin dueño";
+    
+    // Capturar el ID de la base de datos (Soporta Oracle en mayúsculas o minúsculas)
+    const idCita = cita.ID || cita.id;
 
     const card = document.createElement("div");
     card.classList.add("cita-card");
+    // Le asignamos el ID al HTML para que la función de Borrar lo pueda desaparecer
+    card.id = `cita-${idCita}`; 
+
     card.innerHTML = `
-      <div class="cita-time">⏰ ${timeStr}</div>
       <div class="cita-info">
-        <span>🐾 <strong>Mascota:</strong> ${mascota}</span>
-        <span>👤 <strong>Dueño:</strong> ${dueno}</span>
+        <h4>🐾 ${mascota}</h4>
+        <p><strong>⏰ Hora:</strong> ${timeStr} | 👤 <strong>Dueño:</strong> ${dueno}</p>
+      </div>
+      
+      <hr>
+      
+      <div class="cita-actions">
+        <!-- BOTÓN MODIFICAR -->
+        <div class="reprogramar-group">
+          <label for="nueva-fecha-${idCita}">Nuevo horario:</label>
+          <input type="datetime-local" id="nueva-fecha-${idCita}">
+          <button onclick="reprogramarCita(${idCita})" class="btn-secondary">Modificar (Reprogramar)</button>
+        </div>
+        
+        <!-- BOTÓN BORRAR -->
+        <button onclick="cancelarCita(${idCita})" class="btn-danger">Borrar (Cancelar)</button>
       </div>
     `;
+    
     listContainer.appendChild(card);
   });
 }

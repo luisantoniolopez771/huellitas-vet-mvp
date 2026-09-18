@@ -1,4 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* =========================================
+   VARIABLES Y RESETEO BASE
+========================================= */
+:root {
+    --primary-color: #0ea5e9; /* Azul veterinario */
+    --primary-hover: #0284c7;
+    --danger-color: #ef4444; /* Rojo para cancelar */
+    --danger-hover: #dc2626;
+    --success-color: #10b981;
+    --bg-color: #f0fdfa; /* Fondo muy suave cyan */
+    --card-bg: #ffffff;
+    --text-main: #334155;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+}
 
 * {
     box-sizing: border-box;
@@ -7,259 +21,282 @@
 }
 
 body {
-    min-height: 100vh;
-    padding: 30px 16px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #f1f5f9;
-    color: #1e293b;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
 }
 
+/* =========================================
+   LAYOUT PRINCIPAL
+========================================= */
 .app-container {
-    width: 100%;
-    max-width: 720px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .app-header {
     text-align: center;
+    margin-bottom: 30px;
 }
 
 .app-header h1 {
-    font-size: 1.8rem;
-    color: #0f172a;
-    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 5px;
 }
 
-.app-header .subtitle {
-    color: #64748b;
-    font-size: 0.95rem;
-    margin-top: 4px;
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
 }
 
-/* Tarjeta Principal del Calendario */
-.calendar-card {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-    padding: 28px;
-    border: 1px solid #e2e8f0;
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: start;
 }
 
-/* Cabecera del Mes */
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* =========================================
+   TARJETAS (CARDS)
+========================================= */
+.calendar-card, .panel-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.panel-card {
     margin-bottom: 24px;
 }
 
-.calendar-header h2 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #0f172a;
-    text-transform: capitalize;
+.panel-card h2, .panel-card h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* =========================================
+   CALENDARIO
+========================================= */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .nav-btn {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: #334155;
-    border-radius: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 5px 15px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
 }
 
 .nav-btn:hover {
-    background: #0284c7;
-    border-color: #0284c7;
-    color: #ffffff;
-    transform: translateY(-1px);
+    background-color: var(--border-color);
+    color: var(--text-main);
 }
 
-.nav-btn:active {
-    transform: translateY(0);
-}
-
-/* Encabezado Días de la semana */
 .weekdays-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
-    font-size: 0.85rem;
     font-weight: 600;
-    color: #64748b;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f5f9;
-    margin-bottom: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
 }
 
-/* Cuadrícula de días */
 .days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
-    margin-bottom: 28px;
 }
 
-.day-cell {
-    aspect-ratio: 1;
-    min-height: 44px;
+/* Estilos para los días generados por JS (app.js) */
+.days-grid div {
+    min-height: 80px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+.days-grid div:hover {
+    background-color: #e0f2fe;
+    border-color: var(--primary-color);
+}
+
+/* =========================================
+   FORMULARIOS Y BOTONES
+========================================= */
+.form-layout {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 0.95rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-group label {
     font-weight: 500;
-    color: #1e293b;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.18s ease;
-    user-select: none;
-    background-color: transparent;
+    margin-bottom: 5px;
+    color: var(--text-main);
 }
 
-.day-cell:hover:not(.other-month) {
-    background-color: #e0f2fe;
-    color: #0369a1;
+.input-group input, .reprogramar-group input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-.day-cell.other-month {
-    color: #cbd5e1;
-    cursor: default;
+.input-group input:focus, .reprogramar-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
 }
 
-/* Día de hoy */
-.day-cell.today {
-    border: 2px solid #0284c7;
-    font-weight: 700;
-    color: #0284c7;
-}
-
-/* Días con citas programadas */
-.day-cell.has-cita::after {
-    content: '';
-    position: absolute;
-    bottom: 6px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #0284c7;
-}
-
-/* Día seleccionado */
-.day-cell.selected {
-    background-color: #0284c7 !important;
-    color: #ffffff !important;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
-}
-
-.day-cell.selected::after {
-    background-color: #ffffff !important;
-}
-
-/* Sección de Detalles de Citas */
-.details-section {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 24px;
-}
-
-.details-section h3 {
-    font-size: 1.1rem;
+button {
     font-weight: 600;
-    color: #0f172a;
-    text-transform: capitalize;
-    margin-bottom: 16px;
+    font-size: 1rem;
+    transition: all 0.2s;
 }
 
-.citas-list {
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover);
+}
+
+/* =========================================
+   LISTA DE CITAS
+========================================= */
+.cita-card {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 15px;
+}
+
+.cita-info h4 {
+    margin-bottom: 5px;
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+.cita-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.cita-card hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 15px 0;
+}
+
+.cita-actions {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-/* Tarjeta individual de Cita */
-.cita-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-left: 4px solid #0284c7;
-    border-radius: 10px;
-    padding: 14px 18px;
+.reprogramar-group {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.cita-card:hover {
-    transform: translateX(3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-
-.cita-time {
-    font-weight: 700;
-    color: #0369a1;
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-    padding: 4px 10px;
-    border-radius: 6px;
+.reprogramar-group label {
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
-.cita-info {
-    color: #334155;
-    font-size: 0.95rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+/* =========================================
+   RESPONSIVO (MÓVILES Y TABLETS)
+========================================= */
+@media (max-width: 900px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr; /* Colapsa a una sola columna */
+    }
+    
+    .days-grid div {
+        min-height: 60px; /* Celdas más pequeñas en móvil */
+        font-size: 0.9rem;
+    }
 }
 
-.empty-msg {
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    border-radius: 10px;
-    padding: 24px;
-    text-align: center;
-    color: #64748b;
-    font-size: 0.95rem;
+/* =========================================
+   DÍAS CON CITAS PROGRAMADAS
+========================================= */
+.days-grid div.has-cita {
+    background-color: #dbeafe; /* Fondo azul clarito */
+    border-color: #93c5fd;     /* Borde azul más marcado */
+    color: #1e3a8a;            /* Texto azul oscuro */
+    font-weight: 700;          /* Letra en negrita para resaltar */
 }
 
-/* Responsividad */
-@media (max-width: 480px) {
-    body {
-        padding: 16px 8px;
-    }
+/* Efecto al pasar el mouse sobre un día con cita */
+.days-grid div.has-cita:hover {
+    background-color: #bfdbfe;
+    border-color: var(--primary-color);
+}
 
-    .calendar-card {
-        padding: 16px;
-    }
-
-    .day-cell {
-        min-height: 38px;
-        font-size: 0.85rem;
-    }
-
-    .weekdays-grid {
-        font-size: 0.75rem;
-    }
-
-    .cita-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+/* Opcional: Para destacar el día de HOY */
+.days-grid div.today {
+    background-color: #fef08a; /* Fondo amarillo tenue */
+    border-color: #facc15;
+    font-weight: bold;
 }

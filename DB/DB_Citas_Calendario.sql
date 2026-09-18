@@ -9,6 +9,7 @@ CREATE TABLE citas (
     dueno VARCHAR2(100) NOT NULL,
     fecha_hora TIMESTAMP NOT NULL
 );
+ALTER TABLE citas ADD estatus VARCHAR2(20) DEFAULT 'Activa';
 
 -- Insertar registro de prueba
 INSERT INTO citas (mascota, dueno, fecha_hora)
